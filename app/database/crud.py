@@ -1,5 +1,4 @@
-from app.database.db import connect_db
-from datetime import datetime
+from app.database.db import connect_db 
 
 def get_all_topics():
     conn = connect_db()
@@ -9,6 +8,17 @@ def get_all_topics():
     cur.close()
     conn.close()
     return topics
+
+def get_topic_by_id(topic_id: int):
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, topic, image_url, sent_at FROM watercooler_topics WHERE id = %s", (topic_id,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    if row:
+        return {"id": row[0], "topic": row[1], "image_url": row[2], "sent_at": row[3]}
+    return None
 
 def add_topic(topic, image_url):
     conn = connect_db()

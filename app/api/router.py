@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.database.models import TopicCreate, TopicUpdate
-from app.database.crud import add_topic, update_topic, delete_topic, get_all_topics, get_unsent_latest_topic, mark_topic_as_sent
+from app.database.crud import add_topic, update_topic, delete_topic, get_all_topics, get_topic_by_id, get_unsent_latest_topic, mark_topic_as_sent
 from app.slack.integration import send_watercooler_topic
 
 router = APIRouter()
@@ -38,5 +38,18 @@ def send_latest_topic():
         send_watercooler_topic(topic['topic'], topic['image_url']) 
         mark_topic_as_sent(topic['id'])
         return {"message": "Latest topic sent successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send topic: {str(e)}")
+
+@router.put("/topics/{topic_id}/send")
+def send_topic(topic_id: int): 
+    topic = get_topic_by_id(topic_id)
+    if not topic:
+        raise HTTPException(status_code=404, detail="Topic not found")
+     
+    try:
+        send_watercooler_topic(topic['topic'], topic['image_url']) 
+        mark_topic_as_sent(topic_id) 
+        return {"message": "Topic sent successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to send topic: {str(e)}")

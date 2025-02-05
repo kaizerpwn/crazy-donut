@@ -1,4 +1,5 @@
 from app.database.db import connect_db
+from datetime import datetime
 
 def get_all_topics():
     conn = connect_db()
@@ -60,5 +61,27 @@ def delete_topic(topic_id: int):
     cur.execute("DELETE FROM watercooler_topics WHERE id = %s", (topic_id,))
     conn.commit()
 
+    cur.close()
+    conn.close()
+
+
+def get_unsent_latest_topic():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, topic, image_url FROM watercooler_topics WHERE sent_at IS NULL ORDER BY id DESC LIMIT 1")
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    
+    if row:
+        return {"id": row[0], "topic": row[1], "image_url": row[2]}
+    return None
+
+def mark_topic_as_sent(topic_id: int):
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("UPDATE watercooler_topics SET sent_at = CURRENT_TIMESTAMP WHERE id = %s", (topic_id,))
+    conn.commit()
     cur.close()
     conn.close()

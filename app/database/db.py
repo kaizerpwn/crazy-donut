@@ -11,7 +11,8 @@ def create_database():
         CREATE TABLE IF NOT EXISTS watercooler_topics (
             id INT AUTO_INCREMENT PRIMARY KEY,
             topic TEXT NOT NULL,
-            image_url TEXT
+            image_url TEXT,
+            sent_at TIMESTAMP NULL DEFAULT NULL
         )
     """)
     conn.commit()

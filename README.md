@@ -20,7 +20,7 @@ Spice up your team’s Slack workspace with **Crazy Donut**, the fun and engagin
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-repo/crazy-donut.git
+   git clone https://github.com/kaizerpwn/crazy-donut.git
    cd crazy-donut
    ```
 2. **Install dependencies:**

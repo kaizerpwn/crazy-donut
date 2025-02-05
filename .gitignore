@@ -3,3 +3,4 @@ app/database/__pycache__
 app/slack/__pycache__
 app/api/__pycache__
 app/scheduler/__pycache__
+.env

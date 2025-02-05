@@ -18,28 +18,30 @@ Spice up your team’s Slack workspace with **Crazy Donut**, the fun and engagin
 
 ## 🛠 Installation & Setup
 
-1. **Clone the repository:**  
+1. **Clone the repository:**
    ```sh
    git clone https://github.com/your-repo/crazy-donut.git
    cd crazy-donut
    ```
-2. **Install dependencies:**  
+2. **Install dependencies:**
    ```sh
-   pip install
+   pip install -r requirements.txt
    ```
-3. **Configure Slack App:**  
+3. **Configure Slack App:**
+
    - Create a new Slack app [here](https://api.slack.com/apps).
    - Enable bot permissions and add OAuth scopes.
    - Get your Slack Bot Token and Signing Secret.
    - Add them to a `.env` file:
-   
+
    ```env
    SLACK_BOT_TOKEN=xoxb-...
    SLACK_SIGNING_SECRET=...
    ```
-4. **Run the bot:**  
+
+4. **Run the bot:**
    ```sh
-   python main.py
+   python -m app.main
    ```
 
 ## 🎯 Contributing

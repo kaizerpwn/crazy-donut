@@ -6,22 +6,14 @@ import { TopicModal } from "../components/TopicModal";
 import { Pagination } from "../components/Pagination";
 import { SlackSettingsModal } from "../components/SlackSettingsModal";
 import { Settings, Send, PlusCircle, LogOut } from "lucide-react";
+import useTopics from "../hooks/useTopics";
+import { TopicsAPI } from "../api/Topics/Topics";
+import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
 
 const Dashboard: React.FC = () => {
-  const [topics, setTopics] = useState<Topic[]>([
-    {
-      id: 1,
-      topic: "What's the weirdest food combo you secretly love?",
-      image_url: null,
-      sent_at: null,
-    },
-    {
-      id: 2,
-      topic: "If you could switch jobs with anyone for a day, who would it be?",
-      image_url: null,
-      sent_at: null,
-    },
-  ]);
+  const { topics } = useTopics();
+  const queryClient = useQueryClient();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] =
     useState<boolean>(false);
@@ -35,26 +27,33 @@ const Dashboard: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: number): void => {
-    setTopics(topics.filter((topic) => topic.id !== id));
+  const handleDelete = async (id: number) => {
+    try {
+      await TopicsAPI.deleteTopic(id);
+      queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+    } catch (error) {
+      console.error("Failed to delete topic:", error);
+      alert("Failed to delete topic");
+    }
   };
 
-  const handleSubmit = (formData: TopicFormData): void => {
+  const handleSubmit = async (formData: TopicFormData): Promise<void> => {
     if (editingTopic) {
-      setTopics(
-        topics.map((topic) =>
-          topic.id === editingTopic.id ? { ...topic, ...formData } : topic
-        )
-      );
+      try {
+        await TopicsAPI.updateTopic(editingTopic.id, formData);
+        queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+      } catch (error) {
+        console.error("Failed to update topic:", error);
+        alert("Failed to update topic");
+      }
     } else {
-      setTopics([
-        ...topics,
-        {
-          ...formData,
-          id: Date.now(),
-          sent_at: null,
-        },
-      ]);
+      try {
+        await TopicsAPI.addTopic(formData);
+        queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+      } catch (error) {
+        console.error("Failed to add topic:", error);
+        alert("Failed to add topic");
+      }
     }
     setIsModalOpen(false);
     setEditingTopic(null);
@@ -67,8 +66,7 @@ const Dashboard: React.FC = () => {
     }
 
     try {
-      const updatedTopic = { ...topic, sent_at: new Date().toISOString() };
-      setTopics(topics.map((t) => (t.id === topic.id ? updatedTopic : t)));
+      // TODO: Send the topic to the Slack channel
     } catch (error) {
       console.error("Failed to schedule topic:", error);
       alert("Failed to schedule topic");
@@ -99,15 +97,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-pink-50">
-      <nav className="bg-white bg-opacity-70 backdrop-filter backdrop-blur-sm border-b border-gray-200 border-opacity-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0 flex items-center">
+      <nav className="bg-white border-b border-gray-200 bg-opacity-70 backdrop-filter backdrop-blur-sm border-opacity-30">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center flex-shrink-0">
               <h1 className="text-xl font-bold text-gray-900">Crazy Donut</h1>
             </div>
             <button
               onClick={() => {}}
-              className="inline-flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-150 space-x-2"
+              className="inline-flex items-center px-4 py-2 space-x-2 text-gray-700 transition-colors duration-150 rounded-lg hover:bg-gray-100"
             >
               <LogOut size={18} />
               <span>Logout</span>
@@ -116,14 +114,14 @@ const Dashboard: React.FC = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl p-6 mb-8 border border-white border-opacity-40 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="p-6 mb-8 bg-white border border-white shadow-sm bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border-opacity-40">
+          <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
                 Watercooler Topics
               </h2>
-              <div className="mt-1 flex items-center space-x-2">
+              <div className="flex items-center mt-1 space-x-2">
                 <div
                   className={`h-2 w-2 rounded-full ${
                     slackChannel ? "bg-green-500" : "bg-gray-300"
@@ -139,14 +137,14 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setIsSettingsModalOpen(true)}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-white bg-opacity-80 text-gray-700 hover:bg-opacity-100 transition-colors duration-150 shadow-sm border border-gray-200 space-x-2"
+                className="inline-flex items-center px-4 py-2 space-x-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-200 rounded-lg shadow-sm bg-opacity-80 hover:bg-opacity-100"
               >
                 <Settings size={18} />
                 <span>Slack Settings</span>
               </button>
               <button
                 onClick={handleSendLatest}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-150 shadow-sm space-x-2"
+                className="inline-flex items-center px-4 py-2 space-x-2 text-white transition-colors duration-150 bg-blue-500 rounded-lg shadow-sm hover:bg-blue-600"
               >
                 <Send size={18} />
                 <span>Send Latest</span>
@@ -156,7 +154,7 @@ const Dashboard: React.FC = () => {
                   setEditingTopic(null);
                   setIsModalOpen(true);
                 }}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition-colors duration-150 shadow-sm space-x-2"
+                className="inline-flex items-center px-4 py-2 space-x-2 text-white transition-colors duration-150 bg-pink-500 rounded-lg shadow-sm hover:bg-pink-600"
               >
                 <PlusCircle size={18} />
                 <span>New Topic</span>
@@ -166,7 +164,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="bg-white bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border border-white border-opacity-40 shadow-sm">
+          <div className="bg-white border border-white shadow-sm bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border-opacity-40">
             <TopicsTable
               topics={currentTopics}
               onEdit={handleEdit}

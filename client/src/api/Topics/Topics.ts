@@ -52,4 +52,25 @@ export const TopicsAPI = {
       throw error;
     }
   },
+
+  sendLatestTopic: async (): Promise<void> => {
+    try {
+      await http.get("/topics/send-latest");
+    } catch (error) {
+      console.error("Error sending latest topic:", error);
+      throw error;
+    }
+  },
+
+  sendTopic: async (topicId: number): Promise<void> => {
+    try {
+      await http.put(`/topics/${topicId}/send`);
+    } catch (error) {
+      console.error(
+        `Error occured while sending topic with id ${topicId}:`,
+        error
+      );
+      throw error;
+    }
+  },
 };

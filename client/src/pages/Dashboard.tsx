@@ -66,7 +66,8 @@ const Dashboard: React.FC = () => {
     }
 
     try {
-      // TODO: Send the topic to the Slack channel
+      await TopicsAPI.sendTopic(topic.id);
+      queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
     } catch (error) {
       console.error("Failed to schedule topic:", error);
       alert("Failed to schedule topic");

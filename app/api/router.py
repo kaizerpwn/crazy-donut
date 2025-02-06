@@ -27,7 +27,7 @@ def delete_topic_route(topic_id: int):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.get("/send-latest-topic/")
+@router.get("/topics/send-latest/")
 def send_latest_topic(): 
     topic = get_unsent_latest_topic()
     

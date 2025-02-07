@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Topic } from "../types/Topic";
 import { TopicFormData } from "../types/TopicFormData";
 import { TopicsTable } from "../components/TopicsTable";
@@ -12,12 +13,13 @@ import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
 import useSlackSettings from "../hooks/useSlackSettings";
 import { SlackAPI } from "../api/Slack/Slack";
 import { SlackSettings } from "../types/SlackSettings";
+import { AdminAPI } from "../api/Admin/Admin";
 import toast from "react-hot-toast";
 
 const Dashboard: React.FC = () => {
   const { topics } = useTopics();
   const { slackSettings, refetch: refetchSlackSettings } = useSlackSettings();
-
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -80,7 +82,7 @@ const Dashboard: React.FC = () => {
       await TopicsAPI.sendTopic(topic.id);
       queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
 
-      toast.success("Topic sent successfully.");
+      toast.success("Topic sent successfully");
     } catch (error) {
       console.error("Failed to schedule topic:", error);
       toast.error("Failed to schedule topic");
@@ -118,6 +120,16 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await AdminAPI.logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to logout:", error);
+      toast.error("Failed to logout");
+    }
+  };
+
   const totalPages = Math.ceil(topics.length / topicsPerPage);
   const currentTopics = topics.slice(
     (currentPage - 1) * topicsPerPage,
@@ -133,7 +145,7 @@ const Dashboard: React.FC = () => {
               <h1 className="text-xl font-bold text-gray-900">Crazy Donut</h1>
             </div>
             <button
-              onClick={() => {}}
+              onClick={handleLogout}
               className="inline-flex items-center px-4 py-2 space-x-2 text-gray-700 transition-colors duration-150 rounded-lg hover:bg-gray-100"
             >
               <LogOut size={18} />

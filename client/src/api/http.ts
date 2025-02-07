@@ -17,4 +17,17 @@ http.interceptors.request.use(
   }
 );
 
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default http;

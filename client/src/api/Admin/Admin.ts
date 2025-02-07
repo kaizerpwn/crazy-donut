@@ -7,9 +7,9 @@ export interface LoginRequest {
 
 export const AdminAPI = {
   login: async (loginRequest: LoginRequest): Promise<void> => {
-    await http.post("/login", loginRequest, { withCredentials: true });
+    await http.post("/login", loginRequest);
   },
   logout: async (): Promise<void> => {
-    await http.post("/logout", null, { withCredentials: true });
+    await http.post("/logout", null);
   },
 };

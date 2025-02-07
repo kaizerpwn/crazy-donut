@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends, Response
 from app.database.models import TopicCreate, TopicUpdate, SlackSettingsUpdate, LoginRequest
 from app.database.crud import add_topic, update_topic, delete_topic, get_all_topics, get_topic_by_id, get_unsent_latest_topic, mark_topic_as_sent, get_slack_settings, update_slack_settings
 from app.slack.integration import send_watercooler_topic
-from fastapi.security import OAuth2PasswordRequestForm
 from app.config import ADMIN_USERNAME, ADMIN_PASSWORD
 from app.utils.auth import create_access_token, get_current_user
 
@@ -12,6 +11,19 @@ def admin_user(username: str = Depends(get_current_user)):
     if username != ADMIN_USERNAME:
         raise HTTPException(status_code=403, detail="Not authorized")
     return username
+
+@router.post("/login")
+def login(response: Response, login_request: LoginRequest):
+    if login_request.username != ADMIN_USERNAME or login_request.password != ADMIN_PASSWORD:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    access_token = create_access_token(data={"sub": login_request.username})
+    response.set_cookie(key="access_token", value=access_token, httponly=True)
+    return {"message": "Login successful"}
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="access_token")
+    return {"message": "Logout successful"}
 
 @router.post("/topics/", dependencies=[Depends(admin_user)])
 def create_topic(topic_data: TopicCreate):
@@ -69,7 +81,6 @@ def get_slack_settings_route():
         raise HTTPException(status_code=404, detail="Slack settings not found")
     return settings
 
-
 @router.put("/slack-settings/", dependencies=[Depends(admin_user)])
 def update_slack_settings_route(settings: SlackSettingsUpdate):
     try:
@@ -77,12 +88,3 @@ def update_slack_settings_route(settings: SlackSettingsUpdate):
         return {"message": "Slack settings updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update Slack settings: {str(e)}")
-    
-
-@router.post("/login")
-def login(response: Response, login_request: LoginRequest):
-    if login_request.username != ADMIN_USERNAME or login_request.password != ADMIN_PASSWORD:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    access_token = create_access_token(data={"sub": login_request.username})
-    response.set_cookie(key="access_token", value=access_token, httponly=True)
-    return {"message": "Login successful"}

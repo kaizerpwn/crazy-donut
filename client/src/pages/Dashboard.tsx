@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
             </div>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center px-4 py-2 space-x-2 text-gray-700 transition-colors duration-150 rounded-lg hover:bg-gray-100"
+              className="inline-flex items-center px-4 py-2 space-x-2 text-gray-700 transition-colors duration-150 rounded-lg cursor-pointer hover:bg-gray-100"
             >
               <LogOut size={18} />
               <span>Logout</span>

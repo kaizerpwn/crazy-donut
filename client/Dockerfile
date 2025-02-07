@@ -1,7 +1,7 @@
 FROM node:20-alpine as build
 
 WORKDIR /app
-
+#
 RUN apk add --no-cache curl bash
 
 RUN curl -fsSL https://bun.sh/install | bash

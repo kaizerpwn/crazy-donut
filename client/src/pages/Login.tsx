@@ -31,10 +31,8 @@ const LoginPage = () => {
 
       <div className="relative z-10 w-full max-w-md space-y-6">
         <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-white border border-white shadow-lg bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-xl border-opacity-20">
-              <Coffee className="w-8 h-8 text-pink-500" />
-            </div>
+          <div className="flex justify-center mb-1">
+            <img src="/logo-transparent.png" className="w-32 h-32" alt="Logo" />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Crazy Donut</h1>
           <p className="mt-1 text-sm text-gray-600">

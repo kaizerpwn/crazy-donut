@@ -142,7 +142,14 @@ const Dashboard: React.FC = () => {
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center flex-shrink-0">
-              <h1 className="text-xl font-bold text-gray-900">Crazy Donut</h1>
+              <div className="flex items-center justify-center gap-1">
+                <img
+                  src="/logo-transparent.png"
+                  alt="Logo"
+                  className="h-14 w-14"
+                />
+                <h1 className="text-xl font-bold text-gray-900">Crazy Donut</h1>
+              </div>
             </div>
             <button
               onClick={handleLogout}

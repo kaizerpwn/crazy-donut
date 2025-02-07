@@ -7,10 +7,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
-    return {
-      ...config,
-      url: `${http.defaults.baseURL}${config.url}`,
-    };
+    return config;
   },
   (error) => {
     return Promise.reject(error);

@@ -21,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+print("DEBUG: Allowed origins:", FRONTEND_URL)
+
 slack_settings = get_slack_settings()
 if slack_settings:
     SLACK_BOT_TOKEN = slack_settings['bot_token']

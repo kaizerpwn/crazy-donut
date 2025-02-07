@@ -19,7 +19,7 @@ def create_database():
 
     database_name = DB_CONFIG["database"]
 
-    cur.execute(f"CREATE DATABASE IF NOT EXISTS {database_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    cur.execute(f"CREATE DATABASE IF`NOT EXISTS `{database_name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     cur.close()
     conn.close()
 

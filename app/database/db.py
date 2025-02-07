@@ -15,6 +15,21 @@ def create_database():
             sent_at TIMESTAMP NULL DEFAULT NULL
         )
     """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS slack_settings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            bot_token TEXT,
+            signing_secret TEXT,
+            channel_id TEXT
+        )
+    """)
+    cur.execute("SELECT COUNT(*) FROM slack_settings")
+    count = cur.fetchone()[0]
+    if count == 0:
+        cur.execute("""
+            INSERT INTO slack_settings (bot_token, signing_secret, channel_id)
+            VALUES (NULL, NULL, NULL)
+        """)
     conn.commit()
     cur.close()
     conn.close()

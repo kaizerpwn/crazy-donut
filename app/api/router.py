@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.database.models import TopicCreate, TopicUpdate
-from app.database.crud import add_topic, update_topic, delete_topic, get_all_topics, get_topic_by_id, get_unsent_latest_topic, mark_topic_as_sent
+from app.database.models import TopicCreate, TopicUpdate, SlackSettingsUpdate
+from app.database.crud import add_topic, update_topic, delete_topic, get_all_topics, get_topic_by_id, get_unsent_latest_topic, mark_topic_as_sent, get_slack_settings, update_slack_settings
 from app.slack.integration import send_watercooler_topic
 
 router = APIRouter()
@@ -53,3 +53,19 @@ def send_topic(topic_id: int):
         return {"message": "Topic sent successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to send topic: {str(e)}")
+    
+@router.get("/slack-settings/")
+def get_slack_settings_route():
+    settings = get_slack_settings()
+    if not settings:
+        raise HTTPException(status_code=404, detail="Slack settings not found")
+    return settings
+
+
+@router.put("/slack-settings/")
+def update_slack_settings_route(settings: SlackSettingsUpdate):
+    try:
+        update_slack_settings(settings.bot_token, settings.signing_secret, settings.channel_id)
+        return {"message": "Slack settings updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update Slack settings: {str(e)}")

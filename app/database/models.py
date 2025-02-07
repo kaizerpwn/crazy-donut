@@ -15,3 +15,8 @@ class TopicOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SlackSettingsUpdate(BaseModel):
+    bot_token: str
+    signing_secret: str
+    channel_id: str

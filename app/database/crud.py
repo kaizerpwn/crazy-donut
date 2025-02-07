@@ -95,3 +95,24 @@ def mark_topic_as_sent(topic_id: int):
     conn.commit()
     cur.close()
     conn.close()
+
+def get_slack_settings():
+    conn = connect_db()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("SELECT bot_token, signing_secret, channel_id FROM slack_settings LIMIT 1")
+    settings = cur.fetchone()
+    cur.close()
+    conn.close()
+    return settings
+
+def update_slack_settings(bot_token: str, signing_secret: str, channel_id: str):
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE slack_settings
+        SET bot_token = %s, signing_secret = %s, channel_id = %s
+        WHERE id = 1
+    """, (bot_token, signing_secret, channel_id))
+    conn.commit()
+    cur.close()
+    conn.close()

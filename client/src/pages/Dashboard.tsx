@@ -9,9 +9,14 @@ import { Settings, Send, PlusCircle, LogOut } from "lucide-react";
 import useTopics from "../hooks/useTopics";
 import { TopicsAPI } from "../api/Topics/Topics";
 import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
+import useSlackSettings from "../hooks/useSlackSettings";
+import { SlackAPI } from "../api/Slack/Slack";
+import { SlackSettings } from "../types/SlackSettings";
 
 const Dashboard: React.FC = () => {
   const { topics } = useTopics();
+  const { slackSettings, refetch: refetchSlackSettings } = useSlackSettings();
+
   const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -19,7 +24,6 @@ const Dashboard: React.FC = () => {
     useState<boolean>(false);
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [slackChannel, setSlackChannel] = useState<string>("");
   const topicsPerPage = 5;
 
   const handleEdit = (topic: Topic): void => {
@@ -60,7 +64,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSchedule = async (topic: Topic): Promise<void> => {
-    if (!slackChannel) {
+    if (!slackSettings.channel_id) {
       alert("Please set a Slack channel ID first");
       return;
     }
@@ -75,7 +79,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSendLatest = async (): Promise<void> => {
-    if (!slackChannel) {
+    if (!slackSettings.channel_id) {
       alert("Please set a Slack channel ID first");
       return;
     }
@@ -88,6 +92,19 @@ const Dashboard: React.FC = () => {
 
     const latest = unsent[unsent.length - 1];
     await handleSchedule(latest);
+  };
+
+  const handleSaveSlackSettings = async (
+    settings: SlackSettings
+  ): Promise<void> => {
+    try {
+      await SlackAPI.updateSlackSettings(settings);
+      refetchSlackSettings();
+      setIsSettingsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to update Slack settings:", error);
+      alert("Failed to update Slack settings");
+    }
   };
 
   const totalPages = Math.ceil(topics.length / topicsPerPage);
@@ -125,12 +142,12 @@ const Dashboard: React.FC = () => {
               <div className="flex items-center mt-1 space-x-2">
                 <div
                   className={`h-2 w-2 rounded-full ${
-                    slackChannel ? "bg-green-500" : "bg-gray-300"
+                    slackSettings.channel_id ? "bg-green-500" : "bg-gray-300"
                   }`}
                 />
                 <p className="text-sm text-gray-600">
-                  {slackChannel
-                    ? `Connected to #${slackChannel}`
+                  {slackSettings.channel_id
+                    ? `Connected to #${slackSettings.channel_id}`
                     : "No Slack channel connected"}
                 </p>
               </div>
@@ -194,8 +211,8 @@ const Dashboard: React.FC = () => {
       <SlackSettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
-        onSave={setSlackChannel}
-        currentChannelId={slackChannel}
+        onSave={handleSaveSlackSettings}
+        currentSettings={slackSettings}
       />
     </div>
   );

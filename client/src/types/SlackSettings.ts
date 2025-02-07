@@ -1,3 +1,5 @@
 export interface SlackSettings {
-  channelId: string;
+  bot_token: string;
+  signing_secret: string;
+  channel_id: string;
 }

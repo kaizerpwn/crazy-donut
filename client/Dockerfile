@@ -1,7 +1,7 @@
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 WORKDIR /app
-#
+
 RUN apk add --no-cache curl bash
 
 RUN curl -fsSL https://bun.sh/install | bash
@@ -16,7 +16,7 @@ COPY . .
 
 RUN bun run build
 
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

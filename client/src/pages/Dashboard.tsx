@@ -12,6 +12,7 @@ import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
 import useSlackSettings from "../hooks/useSlackSettings";
 import { SlackAPI } from "../api/Slack/Slack";
 import { SlackSettings } from "../types/SlackSettings";
+import toast from "react-hot-toast";
 
 const Dashboard: React.FC = () => {
   const { topics } = useTopics();
@@ -35,9 +36,11 @@ const Dashboard: React.FC = () => {
     try {
       await TopicsAPI.deleteTopic(id);
       queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+
+      toast.success("Topic deleted successfully");
     } catch (error) {
       console.error("Failed to delete topic:", error);
-      alert("Failed to delete topic");
+      toast.error("Failed to delete topic");
     }
   };
 
@@ -46,17 +49,21 @@ const Dashboard: React.FC = () => {
       try {
         await TopicsAPI.updateTopic(editingTopic.id, formData);
         queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+
+        toast.success("Topic updated successfully");
       } catch (error) {
         console.error("Failed to update topic:", error);
-        alert("Failed to update topic");
+        toast.error("Failed to update topic");
       }
     } else {
       try {
         await TopicsAPI.addTopic(formData);
         queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+
+        toast.success("Topic added successfully");
       } catch (error) {
         console.error("Failed to add topic:", error);
-        alert("Failed to add topic");
+        toast.error("Failed to add topic");
       }
     }
     setIsModalOpen(false);
@@ -72,21 +79,23 @@ const Dashboard: React.FC = () => {
     try {
       await TopicsAPI.sendTopic(topic.id);
       queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
+
+      toast.success("Topic sent successfully.");
     } catch (error) {
       console.error("Failed to schedule topic:", error);
-      alert("Failed to schedule topic");
+      toast.error("Failed to schedule topic");
     }
   };
 
   const handleSendLatest = async (): Promise<void> => {
     if (!slackSettings.channel_id) {
-      alert("Please set a Slack channel ID first");
+      toast.error("Please set a Slack channel ID first");
       return;
     }
 
     const unsent = topics.filter((topic) => !topic.sent_at);
     if (unsent.length === 0) {
-      alert("No unsent topics available");
+      toast.error("No unsent topics available");
       return;
     }
 
@@ -101,9 +110,11 @@ const Dashboard: React.FC = () => {
       await SlackAPI.updateSlackSettings(settings);
       refetchSlackSettings();
       setIsSettingsModalOpen(false);
+
+      toast.success("Slack settings updated successfully");
     } catch (error) {
       console.error("Failed to update Slack settings:", error);
-      alert("Failed to update Slack settings");
+      toast.error("Failed to update Slack settings");
     }
   };
 

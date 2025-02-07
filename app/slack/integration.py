@@ -8,7 +8,7 @@ def send_watercooler_topic(topic, image_url):
     try:
         client.chat_postMessage(
             channel=CHANNEL_ID,
-            text=f"*Time for a Watercooler topic!* \n\n> {topic} 🤔",
+            text=f"*Time for a Watercooler topic!* \n\n> {topic}",
             attachments=[{"image_url": image_url, "alt_text": "Watercooler topic image", "title": ""}] if image_url else None
         )
         print("Message sent successfully!")

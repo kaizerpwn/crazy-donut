@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SlackSettings } from "../types/SlackSettings";
 
 interface SlackSettingsModalProps {
@@ -19,6 +19,12 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
     currentSettings.signing_secret
   );
   const [channelId, setChannelId] = useState(currentSettings.channel_id);
+
+  useEffect(() => {
+    setBotToken(currentSettings.bot_token);
+    setSigningSecret(currentSettings.signing_secret);
+    setChannelId(currentSettings.channel_id);
+  }, [currentSettings]);
 
   if (!isOpen) return null;
 

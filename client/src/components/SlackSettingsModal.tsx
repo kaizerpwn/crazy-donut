@@ -20,8 +20,10 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
     currentSettings.signing_secret
   );
   const [channelId, setChannelId] = useState(currentSettings.channel_id);
+  const [giphyApiKey, setGiphyApiKey] = useState(currentSettings.giphy_api_key);
   const [showSecret, setShowSecret] = useState(false);
   const [showToken, setShowToken] = useState(false);
+  const [showGiphyApiKey, setShowGiphyApiKey] = useState(false);
 
   useEffect(() => {
     setBotToken(currentSettings.bot_token);
@@ -35,6 +37,7 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
       bot_token: botToken,
       signing_secret: signingSecret,
       channel_id: channelId,
+      giphy_api_key: giphyApiKey,
     });
     onClose();
   };
@@ -111,6 +114,34 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
                   className="absolute text-gray-400 -translate-y-1/2 cursor-pointer right-3 top-1/2 hover:text-gray-600"
                 >
                   {showSecret ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center mb-1.5 text-sm font-medium text-gray-700">
+                <Key className="w-4 h-4 mr-1.5" />
+                Giphy API Key
+              </label>
+              <div className="relative">
+                <input
+                  type={showGiphyApiKey ? "text" : "password"}
+                  value={giphyApiKey}
+                  onChange={(e) => setGiphyApiKey(e.target.value)}
+                  className="w-full px-4 py-2.5 pr-10 bg-white bg-opacity-70 border border-gray-200 rounded-lg outline-none transition-all duration-200 
+                    focus:border-pink-500 focus:ring-4 focus:ring-pink-500 focus:ring-opacity-20"
+                  placeholder="Enter signing secret..."
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGiphyApiKey(!showGiphyApiKey)}
+                  className="absolute text-gray-400 -translate-y-1/2 cursor-pointer right-3 top-1/2 hover:text-gray-600"
+                >
+                  {showGiphyApiKey ? (
                     <EyeOff className="w-4 h-4" />
                   ) : (
                     <Eye className="w-4 h-4" />

@@ -20,15 +20,16 @@ def create_database():
             id INT AUTO_INCREMENT PRIMARY KEY,
             bot_token TEXT,
             signing_secret TEXT,
-            channel_id TEXT
+            channel_id TEXT,
+            giphy_api_key TEXT
         )
     """)
     cur.execute("SELECT COUNT(*) FROM slack_settings")
     count = cur.fetchone()[0]
     if count == 0:
         cur.execute("""
-            INSERT INTO slack_settings (bot_token, signing_secret, channel_id)
-            VALUES (NULL, NULL, NULL)
+            INSERT INTO slack_settings (bot_token, signing_secret, channel_id, giphy_api_key)
+            VALUES (NULL, NULL, NULL, NULL)
         """)
     conn.commit()
     cur.close()

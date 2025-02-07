@@ -160,7 +160,7 @@ const Dashboard: React.FC = () => {
         }}
         onSubmit={handleSubmit}
         topic={editingTopic}
-        giphyApiKey="VQJj1If9D4Z0HXeV7IBrBzX3TWZvXfSc"
+        giphyApiKey={slackSettings.giphy_api_key}
       />
 
       <SlackSettingsModal

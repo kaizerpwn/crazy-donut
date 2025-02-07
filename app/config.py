@@ -2,9 +2,10 @@ import os
 from dotenv import load_dotenv
  
 load_dotenv()
- 
-SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")
+
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+
 DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
     "user": os.getenv("DB_USER"),

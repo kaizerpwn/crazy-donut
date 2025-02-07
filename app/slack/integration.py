@@ -1,6 +1,14 @@
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from app.config import SLACK_BOT_TOKEN, CHANNEL_ID
+from app.database.crud import get_slack_settings
+
+slack_settings = get_slack_settings()
+if slack_settings:
+    SLACK_BOT_TOKEN = slack_settings['bot_token']
+    SLACK_SIGNING_SECRET = slack_settings['signing_secret']
+    CHANNEL_ID = slack_settings['channel_id']
+else:
+    raise ValueError("Slack settings not found in the database")
 
 client = WebClient(token=SLACK_BOT_TOKEN)
 

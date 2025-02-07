@@ -4,3 +4,5 @@ slack_sdk
 python-dotenv
 mysql-connector-python
 apscheduler
+python-jose
+python-multipart

@@ -20,3 +20,7 @@ class SlackSettingsUpdate(BaseModel):
     bot_token: str
     signing_secret: str
     channel_id: str
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str

@@ -71,7 +71,7 @@ export const TopicModal = memo(
               </div>
               <button
                 onClick={onClose}
-                className="p-1 text-gray-400 transition-colors rounded-lg hover:text-gray-600"
+                className="p-1 text-gray-400 transition-colors rounded-lg cursor-pointer hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -141,7 +141,7 @@ export const TopicModal = memo(
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, image_url: "" }))
                     }
-                    className="absolute p-1 bg-white rounded-full shadow-sm top-2 right-2 hover:bg-gray-100"
+                    className="absolute p-1 bg-white rounded-full shadow-sm cursor-pointer top-2 right-2 hover:bg-gray-100"
                   >
                     <X className="w-4 h-4 text-gray-600" />
                   </button>
@@ -152,14 +152,14 @@ export const TopicModal = memo(
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  className="px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-4 py-2.5 text-white bg-pink-500 hover:bg-pink-600 rounded-lg transition-all duration-200 
+                  className={`px-4 py-2.5 text-white bg-pink-500 hover:bg-pink-600 rounded-lg transition-all duration-200 cursor-pointer 
                   focus:ring-4 focus:ring-pink-500 focus:ring-opacity-50 flex items-center
                   ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
                 >

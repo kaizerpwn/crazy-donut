@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { SlackSettings } from "../types/SlackSettings";
+import { X, Key, Hash, Bot, Eye, EyeOff } from "lucide-react";
 
 interface SlackSettingsModalProps {
   isOpen: boolean;
@@ -19,6 +20,8 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
     currentSettings.signing_secret
   );
   const [channelId, setChannelId] = useState(currentSettings.channel_id);
+  const [showSecret, setShowSecret] = useState(false);
+  const [showToken, setShowToken] = useState(false);
 
   useEffect(() => {
     setBotToken(currentSettings.bot_token);
@@ -26,72 +29,127 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
     setChannelId(currentSettings.channel_id);
   }, [currentSettings]);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      bot_token: botToken,
+      signing_secret: signingSecret,
+      channel_id: channelId,
+    });
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md p-6 bg-white border border-white rounded-lg shadow-xl bg-opacity-60 backdrop-filter backdrop-blur-sm border-opacity-40">
-        <h2 className="mb-4 text-xl font-semibold text-gray-800">
-          Slack Settings
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
-              Bot Token
-            </label>
-            <input
-              type="text"
-              value={botToken}
-              onChange={(e) => setBotToken(e.target.value)}
-              className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg outline-none bg-opacity-70 focus:border-pink-500 focus:ring-2 focus:ring-pink-200"
-              placeholder="Enter Slack bot token..."
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
-              Signing Secret
-            </label>
-            <input
-              type="text"
-              value={signingSecret}
-              onChange={(e) => setSigningSecret(e.target.value)}
-              className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg outline-none bg-opacity-70 focus:border-pink-500 focus:ring-2 focus:ring-pink-200"
-              placeholder="Enter Slack signing secret..."
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
-              Channel ID
-            </label>
-            <input
-              type="text"
-              value={channelId}
-              onChange={(e) => setChannelId(e.target.value)}
-              className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg outline-none bg-opacity-70 focus:border-pink-500 focus:ring-2 focus:ring-pink-200"
-              placeholder="Enter Slack channel ID..."
-            />
-          </div>
-          <div className="flex justify-end space-x-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="w-full max-w-md animate-modal-appear">
+        <div className="relative bg-white border border-white shadow-xl bg-opacity-80 backdrop-filter backdrop-blur-md rounded-2xl border-opacity-40">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 border-opacity-50">
+            <div className="flex items-center space-x-2">
+              <div className="p-2 bg-pink-100 rounded-lg">
+                <Bot className="w-5 h-5 text-pink-500" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Slack Settings
+              </h2>
+            </div>
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100"
+              className="p-1 text-gray-400 transition-colors rounded-lg cursor-pointer hover:text-gray-600"
             >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                onSave({
-                  bot_token: botToken,
-                  signing_secret: signingSecret,
-                  channel_id: channelId,
-                });
-                onClose();
-              }}
-              className="px-4 py-2 text-white bg-pink-500 rounded-lg hover:bg-pink-600"
-            >
-              Save
+              <X className="w-5 h-5" />
             </button>
           </div>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            <div>
+              <label className="flex items-center mb-1.5 text-sm font-medium text-gray-700">
+                <Key className="w-4 h-4 mr-1.5" />
+                Bot Token
+              </label>
+              <div className="relative">
+                <input
+                  type={showToken ? "text" : "password"}
+                  value={botToken}
+                  onChange={(e) => setBotToken(e.target.value)}
+                  className="w-full px-4 py-2.5 pr-10 bg-white bg-opacity-70 border border-gray-200 rounded-lg outline-none transition-all duration-200 
+                    focus:border-pink-500 focus:ring-4 focus:ring-pink-500 focus:ring-opacity-20"
+                  placeholder="xoxb-your-bot-token..."
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowToken(!showToken)}
+                  className="absolute text-gray-400 -translate-y-1/2 cursor-pointer right-3 top-1/2 hover:text-gray-600"
+                >
+                  {showToken ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center mb-1.5 text-sm font-medium text-gray-700">
+                <Key className="w-4 h-4 mr-1.5" />
+                Signing Secret
+              </label>
+              <div className="relative">
+                <input
+                  type={showSecret ? "text" : "password"}
+                  value={signingSecret}
+                  onChange={(e) => setSigningSecret(e.target.value)}
+                  className="w-full px-4 py-2.5 pr-10 bg-white bg-opacity-70 border border-gray-200 rounded-lg outline-none transition-all duration-200 
+                    focus:border-pink-500 focus:ring-4 focus:ring-pink-500 focus:ring-opacity-20"
+                  placeholder="Enter signing secret..."
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSecret(!showSecret)}
+                  className="absolute text-gray-400 -translate-y-1/2 cursor-pointer right-3 top-1/2 hover:text-gray-600"
+                >
+                  {showSecret ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center mb-1.5 text-sm font-medium text-gray-700">
+                <Hash className="w-4 h-4 mr-1.5" />
+                Channel ID
+              </label>
+              <input
+                type="text"
+                value={channelId}
+                onChange={(e) => setChannelId(e.target.value)}
+                className="w-full px-4 py-2.5 bg-white bg-opacity-70 border border-gray-200 rounded-lg outline-none transition-all duration-200 
+                  focus:border-pink-500 focus:ring-4 focus:ring-pink-500 focus:ring-opacity-20"
+                placeholder="C0123ABCDEF"
+              />
+            </div>
+
+            <div className="flex items-center justify-end pt-2 space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-gray-700 transition-colors duration-200 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-white transition-colors duration-200 bg-pink-500 rounded-lg cursor-pointer hover:bg-pink-600 focus:ring-4 focus:ring-pink-500 focus:ring-opacity-50"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

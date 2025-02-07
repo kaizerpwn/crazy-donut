@@ -71,7 +71,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         ${
           disabled
             ? "opacity-50 cursor-not-allowed hover:bg-white hover:text-gray-700"
-            : ""
+            : "cursor-pointer"
         }
         focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50
       `}
@@ -81,7 +81,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   );
 
   return (
-    <div className="bg-white bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border border-white border-opacity-40 shadow-sm">
+    <div className="bg-white border border-white shadow-sm bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border-opacity-40">
       <div className="px-4 py-3">
         <div className="sm:hidden">
           <div className="flex items-center justify-between gap-2">

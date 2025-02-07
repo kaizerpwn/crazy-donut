@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import router
 from app.scheduler.job import scheduler
 from app.database.crud import get_slack_settings
-from app.config import SERVER_PORT
+from app.config import SERVER_PORT, FRONTEND_URL
 
 app = FastAPI()
 
@@ -15,7 +15,7 @@ app.include_router(router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"], 
     allow_headers=["*"],

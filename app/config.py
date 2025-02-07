@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SERVER_PORT = os.getenv("SERVER_PORT")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 

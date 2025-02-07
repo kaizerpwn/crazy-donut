@@ -34,3 +34,4 @@ def create_database():
     conn.commit()
     cur.close()
     conn.close()
+

@@ -5,6 +5,7 @@ from app.api.router import router
 from app.scheduler.job import scheduler
 from app.database.db import create_database
 from app.database.crud import get_slack_settings
+from app.config import SERVER_PORT
 
 app = FastAPI()
 
@@ -31,4 +32,4 @@ else:
 scheduler.start()
 
 if __name__ == "__main__": 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=SERVER_PORT)

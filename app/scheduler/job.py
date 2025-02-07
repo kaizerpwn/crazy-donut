@@ -10,4 +10,4 @@ def send_daily_topic():
         send_watercooler_topic(topic['topic'], topic['image_url'])
         mark_topic_as_sent(topic['id'])
 
-scheduler.add_job(send_daily_topic, 'cron', hour=18, minute=31)
+scheduler.add_job(send_daily_topic, 'cron', hour=8, minute=0)

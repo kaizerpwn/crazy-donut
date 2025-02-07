@@ -75,6 +75,39 @@ jobs:
             ghcr.io/kaizerpwn/crazy-donut-backend:${{ github.sha }}
             ghcr.io/kaizerpwn/crazy-donut-backend:latest
 
+  update-backend-infra:
+    needs: [changes, build-backend]
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Infra Repository
+        uses: actions/checkout@v4
+        with:
+          repository: kaizerpwn/infrastructure
+          ref: 'main'
+          token: ${{ secrets.INFRASTRUCTURE_TOKEN }}
+          path: infrastructure
+
+      - name: Update Backend Deployment Manifest
+        run: |
+          echo "Updating backend deployment manifest:"
+          sed -i "s|image: ghcr.io/kaizerpwn/crazy-donut-backend:.*|image: ghcr.io/kaizerpwn/crazy-donut-backend:${{ github.sha }}|g" infrastructure/crazy-donut/backend-deployment.yml
+
+      - name: Commit and Push Backend Changes
+        run: |
+          cd infrastructure
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add crazy-donut/backend-deployment.yml
+          git status
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update backend image to version ${{ github.sha }} for arm64"
+            git push origin main
+          fi
+
   build-frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
@@ -132,10 +165,10 @@ jobs:
             ghcr.io/kaizerpwn/crazy-donut-frontend:${{ github.sha }}
             ghcr.io/kaizerpwn/crazy-donut-frontend:latest
 
-  update-infra:
+  update-frontend-infra:
+    needs: [changes, build-frontend]
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
-    needs: [changes, build-backend, build-frontend]
-    if: ${{ needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' }}
 
     steps:
       - name: Checkout Infra Repository
@@ -146,35 +179,21 @@ jobs:
           token: ${{ secrets.INFRASTRUCTURE_TOKEN }}
           path: infrastructure
 
-      - name: Verify File Presence
-        run: |
-          echo "Checking file presence:"
-          ls -la infrastructure/crazy-donut
-          cat infrastructure/crazy-donut/backend-deployment.yml
-          cat infrastructure/crazy-donut/frontend-deployment.yml
-
-      - name: Update Backend Deployment Manifest
-        if: ${{ needs.changes.outputs.backend == 'true' }}
-        run: |
-          echo "Updating backend deployment manifest:"
-          sed -i "s|image: ghcr.io/kaizerpwn/crazy-donut-backend:.*|image: ghcr.io/kaizerpwn/crazy-donut-backend:${{ github.sha }}|g" infrastructure/crazy-donut/backend-deployment.yml
-
       - name: Update Frontend Deployment Manifest
-        if: ${{ needs.changes.outputs.frontend == 'true' }}
         run: |
           echo "Updating frontend deployment manifest:"
           sed -i "s|image: ghcr.io/kaizerpwn/crazy-donut-frontend:.*|image: ghcr.io/kaizerpwn/crazy-donut-frontend:${{ github.sha }}|g" infrastructure/crazy-donut/frontend-deployment.yml
 
-      - name: Stage and Commit Changes
+      - name: Commit and Push Frontend Changes
         run: |
           cd infrastructure
           git config user.name "GitHub Actions Bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add crazy-donut/backend-deployment.yml crazy-donut/frontend-deployment.yml
+          git add crazy-donut/frontend-deployment.yml
           git status
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update images to version ${{ github.sha }} for arm64"
+            git commit -m "Update frontend image to version ${{ github.sha }} for arm64"
             git push origin main
           fi

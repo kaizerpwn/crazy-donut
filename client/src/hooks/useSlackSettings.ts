@@ -24,6 +24,7 @@ const useSlackSettings = (): UseSlackSettingsResponse => {
       bot_token: "",
       signing_secret: "",
       channel_id: "",
+      giphy_api_key: "",
     },
     isLoading,
     isError,

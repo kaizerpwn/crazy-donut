@@ -1,9 +1,11 @@
+from app.database.db import create_database
+create_database()
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import router
 from app.scheduler.job import scheduler
-from app.database.db import create_database
 from app.database.crud import get_slack_settings
 from app.config import SERVER_PORT
 
@@ -19,8 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-create_database()
-
 slack_settings = get_slack_settings()
 if slack_settings:
     SLACK_BOT_TOKEN = slack_settings['bot_token']
@@ -32,4 +32,4 @@ else:
 scheduler.start()
 
 if __name__ == "__main__": 
-    uvicorn.run(app, host="0.0.0.0", port=SERVER_PORT)
+    uvicorn.run(app, host="0.0.0.0", port=int(SERVER_PORT))

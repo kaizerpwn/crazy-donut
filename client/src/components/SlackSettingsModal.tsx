@@ -29,6 +29,7 @@ export const SlackSettingsModal: React.FC<SlackSettingsModalProps> = ({
     setBotToken(currentSettings.bot_token);
     setSigningSecret(currentSettings.signing_secret);
     setChannelId(currentSettings.channel_id);
+    setGiphyApiKey(currentSettings.giphy_api_key);
   }, [currentSettings]);
 
   const handleSubmit = (e: React.FormEvent) => {

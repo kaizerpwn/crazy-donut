@@ -84,7 +84,7 @@ def get_slack_settings_route():
 @router.put("/slack-settings/", dependencies=[Depends(admin_user)])
 def update_slack_settings_route(settings: SlackSettingsUpdate):
     try:
-        update_slack_settings(settings.bot_token, settings.signing_secret, settings.channel_id)
+        update_slack_settings(settings.bot_token, settings.signing_secret, settings.channel_id, settings.giphy_api_key)
         return {"message": "Slack settings updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update Slack settings: {str(e)}")

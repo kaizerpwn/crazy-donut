@@ -69,7 +69,7 @@ export const GiphySelectModal: React.FC<GiphySelectModalProps> = ({
           <h3 className="text-lg font-semibold text-gray-800">Choose a GIF</h3>
           <button
             onClick={onClose}
-            className="p-1 text-gray-400 rounded-lg hover:text-gray-600"
+            className="p-1 text-gray-400 rounded-lg cursor-pointer hover:text-gray-600"
           >
             <X className="w-5 h-5" />
           </button>

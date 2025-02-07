@@ -3,7 +3,7 @@ from app.database.db import connect_db
 def get_all_topics():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("SELECT id, topic, image_url, sent_at FROM watercooler_topics")
+    cur.execute("SELECT id, topic, image_url, sent_at FROM watercooler_topics ORDER BY id DESC")
     topics = [{"id": row[0], "topic": row[1], "image_url": row[2], "sent_at": row[3]} for row in cur.fetchall()]
     cur.close()
     conn.close()

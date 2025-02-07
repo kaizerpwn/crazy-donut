@@ -1,139 +1,60 @@
-import { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Topic } from "../types/Topic";
-import { TopicFormData } from "../types/TopicFormData";
+import { useTopicManagement } from "../hooks/useTopicManagement";
 import { TopicsTable } from "../components/TopicsTable";
 import { TopicModal } from "../components/TopicModal";
-import { Pagination } from "../components/Pagination";
 import { SlackSettingsModal } from "../components/SlackSettingsModal";
-import { Settings, Send, PlusCircle, LogOut } from "lucide-react";
-import useTopics from "../hooks/useTopics";
-import { TopicsAPI } from "../api/Topics/Topics";
-import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
-import useSlackSettings from "../hooks/useSlackSettings";
-import { SlackAPI } from "../api/Slack/Slack";
-import { SlackSettings } from "../types/SlackSettings";
+import { Pagination } from "../components/Pagination";
 import { AdminAPI } from "../api/Admin/Admin";
+import { Settings, Send, PlusCircle, LogOut } from "lucide-react";
 import toast from "react-hot-toast";
+import { Topic } from "../types/Topic";
+import useSlackSettings from "../hooks/useSlackSettings";
+import useTopics from "../hooks/useTopics";
+
+const TOPICS_PER_PAGE = 5;
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { topics } = useTopics();
   const { slackSettings, refetch: refetchSlackSettings } = useSlackSettings();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] =
-    useState<boolean>(false);
-  const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const topicsPerPage = 5;
-
-  const handleEdit = (topic: Topic): void => {
-    setEditingTopic(topic);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (id: number) => {
-    try {
-      await TopicsAPI.deleteTopic(id);
-      queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
-
-      toast.success("Topic deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete topic:", error);
-      toast.error("Failed to delete topic");
-    }
-  };
-
-  const handleSubmit = async (formData: TopicFormData): Promise<void> => {
-    if (editingTopic) {
-      try {
-        await TopicsAPI.updateTopic(editingTopic.id, formData);
-        queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
-
-        toast.success("Topic updated successfully");
-      } catch (error) {
-        console.error("Failed to update topic:", error);
-        toast.error("Failed to update topic");
-      }
-    } else {
-      try {
-        await TopicsAPI.addTopic(formData);
-        queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
-
-        toast.success("Topic added successfully");
-      } catch (error) {
-        console.error("Failed to add topic:", error);
-        toast.error("Failed to add topic");
-      }
-    }
-    setIsModalOpen(false);
-    setEditingTopic(null);
-  };
-
-  const handleSchedule = async (topic: Topic): Promise<void> => {
-    if (!slackSettings.channel_id) {
-      alert("Please set a Slack channel ID first");
-      return;
-    }
-
-    try {
-      await TopicsAPI.sendTopic(topic.id);
-      queryClient.invalidateQueries(["topics"] as InvalidateQueryFilters);
-
-      toast.success("Topic sent successfully");
-    } catch (error) {
-      console.error("Failed to schedule topic:", error);
-      toast.error("Failed to schedule topic");
-    }
-  };
-
-  const handleSendLatest = async (): Promise<void> => {
-    if (!slackSettings.channel_id) {
-      toast.error("Please set a Slack channel ID first");
-      return;
-    }
-
-    const unsent = topics.filter((topic) => !topic.sent_at);
-    if (unsent.length === 0) {
-      toast.error("No unsent topics available");
-      return;
-    }
-
-    const latest = unsent[unsent.length - 1];
-    await handleSchedule(latest);
-  };
-
-  const handleSaveSlackSettings = async (
-    settings: SlackSettings
-  ): Promise<void> => {
-    try {
-      await SlackAPI.updateSlackSettings(settings);
-      refetchSlackSettings();
-      setIsSettingsModalOpen(false);
-
-      toast.success("Slack settings updated successfully");
-    } catch (error) {
-      console.error("Failed to update Slack settings:", error);
-      toast.error("Failed to update Slack settings");
-    }
-  };
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    isSettingsModalOpen,
+    setIsSettingsModalOpen,
+    editingTopic,
+    setEditingTopic,
+    currentPage,
+    setCurrentPage,
+    handleSubmit,
+    handleDelete,
+    handleSchedule,
+    handleSaveSlackSettings,
+  } = useTopicManagement();
 
   const handleLogout = async (): Promise<void> => {
     try {
       await AdminAPI.logout();
       navigate("/");
     } catch (error) {
-      console.error("Failed to logout:", error);
+      console.error(error);
       toast.error("Failed to logout");
     }
   };
 
-  const totalPages = Math.ceil(topics.length / topicsPerPage);
+  const handleSendLatest = async (): Promise<void> => {
+    const unsent = topics.filter((topic: Topic) => !topic.sent_at);
+    if (unsent.length === 0) {
+      toast.error("No unsent topics available");
+      return;
+    }
+    await handleSchedule(unsent[unsent.length - 1], slackSettings);
+  };
+
   const currentTopics = topics.slice(
-    (currentPage - 1) * topicsPerPage,
-    currentPage * topicsPerPage
+    (currentPage - 1) * TOPICS_PER_PAGE,
+    currentPage * TOPICS_PER_PAGE
   );
 
   return (
@@ -215,14 +136,17 @@ const Dashboard: React.FC = () => {
           <div className="bg-white border border-white shadow-sm bg-opacity-60 backdrop-filter backdrop-blur-sm rounded-xl border-opacity-40">
             <TopicsTable
               topics={currentTopics}
-              onEdit={handleEdit}
+              onEdit={(topic) => {
+                setEditingTopic(topic);
+                setIsModalOpen(true);
+              }}
               onDelete={handleDelete}
-              onSchedule={handleSchedule}
+              onSchedule={(topic) => handleSchedule(topic, slackSettings)}
             />
           </div>
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={Math.ceil(topics.length / TOPICS_PER_PAGE)}
             onPageChange={setCurrentPage}
           />
         </div>
@@ -236,12 +160,16 @@ const Dashboard: React.FC = () => {
         }}
         onSubmit={handleSubmit}
         topic={editingTopic}
+        giphyApiKey="VQJj1If9D4Z0HXeV7IBrBzX3TWZvXfSc"
       />
 
       <SlackSettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
-        onSave={handleSaveSlackSettings}
+        onSave={(settings) => {
+          handleSaveSlackSettings(settings);
+          refetchSlackSettings();
+        }}
         currentSettings={slackSettings}
       />
     </div>

@@ -6,6 +6,10 @@ def connect_db(use_database=True):
     config = DB_CONFIG.copy()
     if not use_database:
         config.pop("database", None)
+    
+    config['charset'] = 'utf8mb4'
+    config['collation'] = 'utf8mb4_unicode_ci'
+    
     return mysql.connector.connect(**config)
 
 def create_database():
@@ -15,7 +19,7 @@ def create_database():
 
     database_name = DB_CONFIG["database"]
 
-    cur.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+    cur.execute(f"CREATE DATABASE IF NOT EXISTS {database_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     cur.close()
     conn.close()
 
@@ -28,7 +32,7 @@ def create_database():
             topic TEXT NOT NULL,
             image_url TEXT,
             sent_at TIMESTAMP NULL DEFAULT NULL
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
     """)
     
     cur.execute("""
@@ -38,7 +42,7 @@ def create_database():
             signing_secret TEXT,
             channel_id TEXT,
             giphy_api_key TEXT
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
     """)
 
     cur.execute("SELECT COUNT(*) FROM slack_settings")

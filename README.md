@@ -1,3 +1,5 @@
+![x1sX85E-removebg-preview](https://github.com/user-attachments/assets/c464eaa5-28b7-4446-b8f0-ffcc024075d3)
+
 # 🍩 Crazy Donut - The Ultimate Watercooler Topic Generator for Slack!
 
 Spice up your team’s Slack workspace with **Crazy Donut**, the fun and engaging bot that keeps conversations fresh! 🚀 Designed to break the ice and encourage spontaneous discussions, Crazy Donut drops creative, lighthearted, and thought-provoking watercooler topics into your channels at just the right moments.

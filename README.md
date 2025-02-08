@@ -6,8 +6,8 @@
 </h1>
 <p align="center">
 <img alt="Static Badge" src="https://img.shields.io/badge/React-19.0.0-blue?logo=react&logoColor=%23fff">
-<img alt="Static Badge" src="https://img.shields.io/badge/FastAPI-0.104.1-blue?logo=fastapi&logoColor=%23fff">
-<img alt="Static Badge" src="https://img.shields.io/badge/Typescript-5.0.2-blue?logo=typescript&logoColor=%23fff">
+<img alt="Static Badge" src="https://img.shields.io/badge/FastAPI-0.112.2-blue?logo=fastapi&logoColor=%23fff">
+<img alt="Static Badge" src="https://img.shields.io/badge/Typescript-5.7.3-blue?logo=typescript&logoColor=%23fff">
 <img alt="Static Badge" src="https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=%23fff">
 </p>
 
@@ -107,7 +107,7 @@ Spice up your team's Slack workspace with **Crazy Donut**, the fun and engaging 
   </tr>
   <tr>
     <td>
-      <img src="https://raw.githubusercontent.com/pydantic/pydantic/main/docs/static/favicon.ico" width="20" height="20"/>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMVBR1uXF5b-IOSAoXgf6GBrHKUyRUPNsFeQ&s" width="20" height="20"/>
       Pydantic
     </td>
     <td>Data validation</td>
@@ -132,7 +132,7 @@ Spice up your team's Slack workspace with **Crazy Donut**, the fun and engaging 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/crazy-donut.git
+git clone https://github.com/kaizerpwn/crazy-donut.git
 
 # Navigate to project directory
 cd crazy-donut

@@ -166,7 +166,7 @@ python -m app.main
 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/crazy-donut.git
+git clone https://github.com/kaizerpwn/crazy-donut.git
 cd crazy-donut
 ```
 

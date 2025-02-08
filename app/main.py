@@ -11,6 +11,8 @@ from app.config import SERVER_PORT, FRONTEND_URL
 
 app = FastAPI()
 
+app.include_router(router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[FRONTEND_URL],
@@ -20,8 +22,6 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
-
-app.include_router(router)
 
 slack_settings = get_slack_settings()
 if slack_settings:

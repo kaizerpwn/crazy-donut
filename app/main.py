@@ -8,9 +8,6 @@ from app.api.router import router
 from app.scheduler.job import scheduler
 from app.database.crud import get_slack_settings
 from app.config import SERVER_PORT, FRONTEND_URL
-import logging
-logging.basicConfig(level=logging.INFO)
-logging.info(f"DEBUG: CORS Origin {FRONTEND_URL}")
 
 app = FastAPI()
 
@@ -37,6 +34,4 @@ else:
 scheduler.start()
 
 if __name__ == "__main__": 
-    print("DEBUG: CORS Origin" + FRONTEND_URL)
     uvicorn.run(app, host="0.0.0.0", port=int(SERVER_PORT))
-    print("DEBUG: CORS Origin" + FRONTEND_URL)

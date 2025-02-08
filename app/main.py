@@ -11,7 +11,6 @@ from app.config import SERVER_PORT, FRONTEND_URL
 
 app = FastAPI()
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[FRONTEND_URL],
@@ -21,9 +20,8 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
-app.include_router(router)
 
-print("DEBUG: Allowed origins:", FRONTEND_URL)
+app.include_router(router)
 
 slack_settings = get_slack_settings()
 if slack_settings:
@@ -37,3 +35,4 @@ scheduler.start()
 
 if __name__ == "__main__": 
     uvicorn.run(app, host="0.0.0.0", port=int(SERVER_PORT))
+    print("DEBUG: CORS Origin" + FRONTEND_URL)

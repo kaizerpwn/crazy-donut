@@ -63,7 +63,7 @@ Spice up your team's Slack workspace with **Crazy Donut**, the fun and engaging 
   </tr>
   <tr>
     <td>
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" width="20" height="20"/>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Tb6dZbyn9ORqWknAVgCcdjt0qeH5p_Uidg&s" width="20" height="20"/>
       React Query
     </td>
     <td>Server state management</td>

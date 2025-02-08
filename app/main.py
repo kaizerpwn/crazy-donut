@@ -11,7 +11,6 @@ from app.config import SERVER_PORT, FRONTEND_URL
 
 app = FastAPI()
 
-app.include_router(router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,6 +21,7 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
+app.include_router(router)
 
 print("DEBUG: Allowed origins:", FRONTEND_URL)
 

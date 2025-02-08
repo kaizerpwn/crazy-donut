@@ -25,12 +25,12 @@ def logout(response: Response):
     response.delete_cookie(key="access_token")
     return {"message": "Logout successful"}
 
-@router.post("/topics/", dependencies=[Depends(admin_user)])
+@router.post("/topics", dependencies=[Depends(admin_user)])
 def create_topic(topic_data: TopicCreate):
     add_topic(topic_data.topic, topic_data.image_url)
     return {"message": "Topic added successfully"}
 
-@router.get("/topics/", dependencies=[Depends(admin_user)])
+@router.get("/topics", dependencies=[Depends(admin_user)])
 def get_topics():
     return get_all_topics()
 
@@ -47,7 +47,7 @@ def delete_topic_route(topic_id: int):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.get("/topics/send-latest/", dependencies=[Depends(admin_user)])
+@router.get("/topics/send-latest", dependencies=[Depends(admin_user)])
 def send_latest_topic(): 
     topic = get_unsent_latest_topic()
     
@@ -74,14 +74,14 @@ def send_topic(topic_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to send topic: {str(e)}")
     
-@router.get("/slack-settings/", dependencies=[Depends(admin_user)])
+@router.get("/slack-settings", dependencies=[Depends(admin_user)])
 def get_slack_settings_route():
     settings = get_slack_settings()
     if not settings:
         raise HTTPException(status_code=404, detail="Slack settings not found")
     return settings
 
-@router.put("/slack-settings/", dependencies=[Depends(admin_user)])
+@router.put("/slack-settings", dependencies=[Depends(admin_user)])
 def update_slack_settings_route(settings: SlackSettingsUpdate):
     try:
         update_slack_settings(settings.bot_token, settings.signing_secret, settings.channel_id, settings.giphy_api_key)

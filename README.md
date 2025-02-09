@@ -210,9 +210,19 @@ Note: The **GIPHY API** key and other configurations are stored in the database 
 ## 📱 Screenshots
 
 <p align="center">
-  <img src="screenshots/dashboard.png" alt="Dashboard" width="600">
-  <br>
+  <img src="https://i.postimg.cc/JhLjgXY9/screen-capture-ezgif-com-optimize.gif" alt="Dashboard" width="800"/>
+</p>
+
+<p align="center">
   <em>Modern dashboard interface for managing topics</em>
+</p>
+
+<p align="center">
+  <img src="https://i.postimg.cc/W44zyQyZ/screenshot.png" alt="Slack preview" width="800"/>
+</p>
+
+<p align="center">
+  <em>Slack message preview</em>
 </p>
 
 ## 🤝 Contributing

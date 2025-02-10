@@ -1,6 +1,6 @@
 <h1 align="center">
   <p align="center">
-    <img src="https://private-user-images.githubusercontent.com/70588174/411248450-c464eaa5-28b7-4446-b8f0-ffcc024075d3.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzkwMjk3ODUsIm5iZiI6MTczOTAyOTQ4NSwicGF0aCI6Ii83MDU4ODE3NC80MTEyNDg0NTAtYzQ2NGVhYTUtMjhiNy00NDQ2LWI4ZjAtZmZjYzAyNDA3NWQzLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAyMDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMjA4VDE1NDQ0NVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTc2NjA2YTI4ZmIxZGY3OGY4NzlmZjBhOWY1YzcxOTIzZjEwMzY3OTIzZmYyZmEwMWZmY2VlYWRmZDk2NDFiNTYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.z7U-FE3P1Denx0sDiWW7ZcdoCPv4vEvvI3BH6xJd57E" />
+    <img src="https://i.postimg.cc/BZ59K8rC/logo.png" />
   </p>
   <strong>Crazy Donut - The Ultimate Watercooler Topic Generator for Slack! 🍩</strong>
 </h1>

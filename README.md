@@ -159,7 +159,7 @@ python -m app.main
 
 - Node.js 16+
 - Python 3.11+
-- MySQL 10+
+- MySQL 5.7+
 
 ### Step-by-Step Guide
 

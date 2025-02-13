@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
       toast.error("No unsent topics available");
       return;
     }
-    await handleSchedule(unsent[unsent.length - 1], slackSettings);
+    await handleSchedule(unsent[0], slackSettings);
   };
 
   const currentTopics = topics.slice(
